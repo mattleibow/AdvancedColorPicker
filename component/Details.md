@@ -2,7 +2,7 @@
 
 <iframe src="https://appetize.io/embed/1uzmreu5wh2vzm79vpag1nwmqm?device=iphone5s&scale=75&autoplay=true&orientation=portrait&deviceColor=black" 
         width="274px" height="587px" frameborder="0" scrolling="no"
-        style="float:right;">&nbsp;</iframe>
+        style="float:right;margin-left:1em;">&nbsp;</iframe>
 
 An open source color picker component for Xamarin.iOS that is very easy to use.
 
@@ -12,7 +12,7 @@ AdvancedColorPicker is very simple and easy to use. There are two helper methods
 that allow for quickly presenting a color picker. 
 The first is `PresentAsync` that returns the selected color:
 
-    UIColor color = await ColorPickerViewController.PresentAsync(
+    var color = await ColorPickerViewController.PresentAsync(
         NavigationController, 
         "Pick a color!",
         View.BackgroundColor);
