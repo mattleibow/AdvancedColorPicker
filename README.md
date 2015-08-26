@@ -158,5 +158,5 @@ If you use this component in your projects consider adding the following in you 
 
 [1]: https://raw.githubusercontent.com/mattleibow/AdvancedColorPicker/master/Images/iPhone_colorpicker.png
 [2]: https://raw.githubusercontent.com/mattleibow/AdvancedColorPicker/master/Images/iPad_landscape_colorpicker.png
-[3]: https://appetize.io/app/1uzmreu5wh2vzm79vpag1nwmqm?device=iphone5s&scale=75&orientation=portrait
-[4]: https://appetize.io/app/1uzmreu5wh2vzm79vpag1nwmqm?device=ipadair&scale=50&orientation=landscape&deviceColor=black
+[3]: https://appetize.io/app/1uzmreu5wh2vzm79vpag1nwmqm?device=iphone5s&scale=75&orientation=portrait&autoplay=true
+[4]: https://appetize.io/app/1uzmreu5wh2vzm79vpag1nwmqm?device=ipadair&scale=50&orientation=landscape&deviceColor=black&autoplay=true
