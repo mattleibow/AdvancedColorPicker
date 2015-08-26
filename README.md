@@ -2,8 +2,12 @@
 
 An open source color picker component for Xamarin.iOS that is very easy to use.
 
-<iframe src="https://appetize.io/embed/1uzmreu5wh2vzm79vpag1nwmqm?device=iphone5s&scale=75&autoplay=true&orientation=portrait&deviceColor=black" 
-        width="274px" height="587px" frameborder="0" scrolling="no">&nbsp;</iframe>
+## Online Demos
+
+You can view live demos through https://appetize.io/:
+
+  - [iPhoneDemo][3] 
+  - [iPad Demo][4] 
 
 ## Usage
 
@@ -36,6 +40,8 @@ In the case when async method aren't preferrable, there is the synchronous
         color => {
             // use selected color
         });
+
+![AdvancedColorPicker][1]
 
 ### ColorPickerViewController
 
@@ -121,8 +127,7 @@ to preesent a color picker to the user:
     // show the picker
     NavigationController.PresentModalViewController(pickerNav, true);
 
-<iframe src="https://appetize.io/embed/1uzmreu5wh2vzm79vpag1nwmqm?device=ipadair&scale=50&autoplay=true&orientation=landscape&deviceColor=black"
-        width="644px" height="432px" frameborder="0" scrolling="no">&nbsp;</iframe>
+![AdvancedColorPicker][2]
 
 ## Getting Colors
 
@@ -150,3 +155,8 @@ AdvancedColorPicker is licensed under the terms of the MIT license.
 If you use this component in your projects consider adding the following in you app about screen:
 
 > This app uses AdvancedColorPicker developed by Yiannis Bourkelis & Matthew Leibowitz
+
+[1]: https://raw.githubusercontent.com/mattleibow/AdvancedColorPicker/master/Images/iPhone_colorpicker.png
+[2]: https://raw.githubusercontent.com/mattleibow/AdvancedColorPicker/master/Images/iPad_landscape_colorpicker.png
+[3]: https://appetize.io/app/1uzmreu5wh2vzm79vpag1nwmqm?device=iphone5s&scale=75&orientation=portrait
+[4]: https://appetize.io/app/1uzmreu5wh2vzm79vpag1nwmqm?device=ipadair&scale=50&orientation=landscape&deviceColor=black
