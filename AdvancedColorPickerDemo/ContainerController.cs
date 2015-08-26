@@ -1,7 +1,7 @@
 /*
  * This code is licensed under the terms of the MIT license
  *
- * Copyright (C) 2012 Yiannis Bourkelis
+ * Copyright (C) 2012 Yiannis Bourkelis & Matthew Leibowitz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 

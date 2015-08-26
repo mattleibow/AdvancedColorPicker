@@ -1,7 +1,7 @@
 /*
  * This code is licensed under the terms of the MIT license
  *
- * Copyright (C) 2012 Yiannis Bourkelis
+ * Copyright (C) 2012 Yiannis Bourkelis & Matthew Leibowitz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -39,6 +39,9 @@ using nfloat = System.Single;
 
 namespace AdvancedColorPicker
 {
+    /// <summary>
+    /// The view that represents a color picker.
+    /// </summary>
     public class ColorPickerView : UIView
     {
         private CGSize satBrightIndicatorSize;
@@ -48,24 +51,40 @@ namespace AdvancedColorPicker
         private HueIndicatorView hueIndicator;
         private SaturationBrightnessIndicatorView satBrightIndicator;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorPickerView"/> class.
+        /// </summary>
         public ColorPickerView()
         {
             Initialize();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorPickerView"/> class 
+        /// with the specified frame.
+        /// </summary>
+        /// <param name="frame">The frame used by the view, expressed in iOS points.</param>
         public ColorPickerView(CGRect frame)
             : base(frame)
         {
             Initialize();
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorPickerView"/> class 
+        /// with the specified initial selected color.
+        /// </summary>
+        /// <param name="color">The initial selected color.</param>
         public ColorPickerView(UIColor color)
             : base()
         {
             Initialize();
             SelectedColor = color;
         }
-        
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         protected void Initialize()
         {
             satBrightIndicatorSize = new CGSize(28, 28);
@@ -109,6 +128,10 @@ namespace AdvancedColorPicker
             AddSubviews(satbrightPicker, huePicker, preview);
         }
 
+        /// <summary>
+        /// Gets or sets the selected color.
+        /// </summary>
+        /// <value>The selected color.</value>
         public UIColor SelectedColor
         {
             get
@@ -132,8 +155,14 @@ namespace AdvancedColorPicker
             }
         }
 
+        /// <summary>
+        /// Occurs when the a color is selected.
+        /// </summary>
         public event EventHandler<ColorPickedEventArgs> ColorPicked;
 
+        /// <summary>
+        /// Lays out subviews.
+        /// </summary>
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
@@ -195,7 +224,11 @@ namespace AdvancedColorPicker
 
             HandleColorPicked(sender, e);
         }
-        
+
+        /// <summary>
+        /// Handles the <see cref="E:ColorPicked" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="ColorPickedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnColorPicked(ColorPickedEventArgs e)
         {
             var handler = ColorPicked;

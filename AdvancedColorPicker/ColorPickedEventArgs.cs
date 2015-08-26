@@ -1,7 +1,7 @@
 ﻿/*
  * This code is licensed under the terms of the MIT license
  *
- * Copyright (C) 2012 Yiannis Bourkelis
+ * Copyright (C) 2012 Yiannis Bourkelis & Matthew Leibowitz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), to deal 
@@ -31,13 +31,24 @@ using MonoTouch.UIKit;
 
 namespace AdvancedColorPicker
 {
+    /// <summary>
+    /// The event arguments for a when a color is picked from a <see cref="ColorPickerView"/>.
+    /// </summary>
     public class ColorPickedEventArgs : EventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorPickedEventArgs"/> class.
+        /// </summary>
+        /// <param name="selectedColor">The initial selected color.</param>
         public ColorPickedEventArgs(UIColor selectedColor)
         {
             SelectedColor = selectedColor;
         }
 
+        /// <summary>
+        /// Gets the color selected be the <see cref="ColorPickerView"/>.
+        /// </summary>
+        /// <value>The color.</value>
         public UIColor SelectedColor { get; private set; }
     }
 }
