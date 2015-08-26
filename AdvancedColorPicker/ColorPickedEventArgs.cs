@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This code is licensed under the terms of the MIT license
  *
  * Copyright (C) 2012 Yiannis Bourkelis
@@ -21,36 +21,23 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+using System;
+
 #if __UNIFIED__
-using Foundation;
 using UIKit;
 #else
-using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 #endif
 
-namespace AdvancedColorPickerDemo
+namespace AdvancedColorPicker
 {
-    [Register("AppDelegate")]
-    public partial class AppDelegate : UIApplicationDelegate
+    public class ColorPickedEventArgs : EventArgs
     {
-        private ContainerController container;
-        private UINavigationController nav;
-
-        public override UIWindow Window { get; set; }
-        
-        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+        public ColorPickedEventArgs(UIColor selectedColor)
         {
-            Window = new UIWindow(UIScreen.MainScreen.Bounds);
-
-            container = new ContainerController();
-            nav = new UINavigationController(container);
-
-            Window.RootViewController = nav;
-            Window.MakeKeyAndVisible();
-
-            return true;
+            SelectedColor = selectedColor;
         }
+
+        public UIColor SelectedColor { get; private set; }
     }
 }
-

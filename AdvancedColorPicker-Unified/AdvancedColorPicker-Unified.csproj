@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AC4519F9-F624-4562-8E36-23B22C1E92D9}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{AC4519F9-F624-4562-8E36-23B22C1E92DA}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>AdvancedColorPicker</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
@@ -36,17 +36,33 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
+    <Reference Include="Xamarin.iOS" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="ColorPickedEventArgs.cs" />
-    <Compile Include="ColorPickerView.cs" />
-    <Compile Include="ColorPickerViewController.cs" />
-    <Compile Include="HueIndicatorView.cs" />
-    <Compile Include="HuePickerView.cs" />
-    <Compile Include="SaturationBrightnessIndicatorView.cs" />
-    <Compile Include="SaturationBrightnessPickerView.cs" />
-    <Compile Include="SelectedColorPreviewView.cs" />
+    <Compile Include="..\AdvancedColorPicker\ColorPickedEventArgs.cs">
+      <Link>ColorPickedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\ColorPickerView.cs">
+      <Link>ColorPickerView.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\ColorPickerViewController.cs">
+      <Link>ColorPickerViewController.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\HueIndicatorView.cs">
+      <Link>HueIndicatorView.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\HuePickerView.cs">
+      <Link>HuePickerView.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\SaturationBrightnessIndicatorView.cs">
+      <Link>SaturationBrightnessIndicatorView.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\SaturationBrightnessPickerView.cs">
+      <Link>SaturationBrightnessPickerView.cs</Link>
+    </Compile>
+    <Compile Include="..\AdvancedColorPicker\SelectedColorPreviewView.cs">
+      <Link>SelectedColorPreviewView.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

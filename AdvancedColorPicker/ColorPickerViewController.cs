@@ -22,168 +22,137 @@
 */
 
 using System;
+using System.Threading.Tasks;
+
+#if __UNIFIED__
+using CoreGraphics;
+using UIKit;
+#else
 using MonoTouch.UIKit;
-using System.Drawing;
+
+using CGPoint = System.Drawing.PointF;
+using CGSize = System.Drawing.SizeF;
+using CGRect = System.Drawing.RectangleF;
+using nfloat = System.Single;
+#endif
 
 namespace AdvancedColorPicker
 {
-	public class ColorPickerViewController : UIViewController
-	{
-		public event Action ColorPicked;
+    public class ColorPickerViewController : UIViewController
+    {
+        private ColorPickerView colorPicker;
 
-		SizeF satBrightIndicatorSize = new SizeF(28,28);
-		HuePickerView huewView = new HuePickerView();
-		SaturationBrightnessPickerView satbrightview = new SaturationBrightnessPickerView();
-		SelectedColorPreviewView selPrevView = new SelectedColorPreviewView();
-		HueIndicatorView huewIndicatorView = new HueIndicatorView();
-		SatBrightIndicatorView satBrightIndicatorView = new SatBrightIndicatorView();
+        public ColorPickerViewController()
+        {
+            Initialize(UIColor.FromHSB(0.5984375f, 0.5f, 0.7482993f));
+        }
 
-		public ColorPickerViewController ()
-		{
-			satbrightview.hue = .5984375f;
-			satbrightview.saturation = .5f;
-			satbrightview.brightness = .7482993f;
-			huewView.Hue = satbrightview.hue;
+        public ColorPickerViewController(nfloat hue, nfloat saturation, nfloat brightness)
+        {
+            Initialize(UIColor.FromHSB(hue, saturation, brightness));
+        }
 
-			selPrevView.BackgroundColor = UIColor.FromHSB(satbrightview.hue,satbrightview.saturation,satbrightview.brightness);
-		}
+        public ColorPickerViewController(UIColor color)
+        {
+            Initialize(color);
+        }
 
-		public override void ViewDidLoad ()
-		{
-			base.ViewDidLoad ();
+        protected void Initialize(UIColor color)
+        {
+            colorPicker = new ColorPickerView(color);
+        }
 
-			float selectedColorViewHeight = 60;
+        public UIColor SelectedColor
+        {
+            get { return colorPicker.SelectedColor; }
+            set { colorPicker.SelectedColor = value; }
+        }
 
-			float viewSpace = 1;
+        public event EventHandler<ColorPickedEventArgs> ColorPicked
+        {
+            add { colorPicker.ColorPicked += value; }
+            remove { colorPicker.ColorPicked -= value; }
+        }
 
-			selPrevView.Frame = new RectangleF(0,0,this.View.Bounds.Width,selectedColorViewHeight);
-			selPrevView.AutoresizingMask = UIViewAutoresizing.FlexibleWidth;
-			selPrevView.Layer.ShadowOpacity = 0.6f;
-			selPrevView.Layer.ShadowOffset = new SizeF(0,7);
-			selPrevView.Layer.ShadowColor = UIColor.Black.CGColor;
+        public override void LoadView()
+        {
+            View = colorPicker;
+        }
 
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            return UIInterfaceOrientationMask.All;
+        }
 
-			//to megalo view epilogis apoxrwsis tou epilegmenou xrwmats
-			satbrightview.Frame = new RectangleF(0,selectedColorViewHeight + viewSpace , this.View.Bounds.Width, this.View.Bounds.Height - selectedColorViewHeight - selectedColorViewHeight  - viewSpace - viewSpace);
-			satbrightview.AutoresizingMask = UIViewAutoresizing.FlexibleHeight | UIViewAutoresizing.FlexibleWidth;
-			satbrightview.ColorPicked += HandleColorPicked;
-			satbrightview.AutosizesSubviews = true;
+        public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            return true;
+        }
 
-			//to mikro view me ola ta xrwmata
-			huewView.Frame = new RectangleF(0, this.View.Bounds.Bottom - selectedColorViewHeight, this.View.Bounds.Width, selectedColorViewHeight);
-			huewView.AutoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleTopMargin;
-			huewView.HueChanged += HandleHueChanged;
+        public override bool ShouldAutorotate()
+        {
+            return true;
+        }
 
-			huewIndicatorView.huePickerViewRef = huewView;
-			float pos = huewView.Frame.Width * huewView.Hue;
-			huewIndicatorView.Frame = new RectangleF(pos - 10,huewView.Bounds.Y - 2,20,huewView.Bounds.Height + 2);
-			huewIndicatorView.UserInteractionEnabled = false;
-			huewIndicatorView.AutoresizingMask = UIViewAutoresizing.FlexibleLeftMargin | UIViewAutoresizing.FlexibleRightMargin;
-			huewView.AddSubview(huewIndicatorView);
+        public static void PresentModal(UIViewController parent, string title, UIColor initialColor, Action<UIColor> done)
+        {
+            Present(parent, title, initialColor, done, null);
+        }
+        
+        public static void Present(UIViewController parent, string title, UIColor initialColor, Action<UIColor> done, Action<UIColor> colorPicked)
+        {
+            if (parent == null)
+            {
+                throw new ArgumentNullException("parent");
+            }
 
-			satBrightIndicatorView.satBrightPickerViewRef = satbrightview;
-			PointF pos2 = new PointF(satbrightview.saturation * satbrightview.Frame.Size.Width, 
-			                         satbrightview.Frame.Size.Height - (satbrightview.brightness * satbrightview.Frame.Size.Height));
-			satBrightIndicatorView.Frame = new RectangleF(pos2.X - satBrightIndicatorSize.Width/2,pos2.Y-satBrightIndicatorSize.Height/2,satBrightIndicatorSize.Width,satBrightIndicatorSize.Height);
-			satBrightIndicatorView.AutoresizingMask = UIViewAutoresizing.FlexibleLeftMargin | UIViewAutoresizing.FlexibleRightMargin | UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleBottomMargin;
-			satBrightIndicatorView.UserInteractionEnabled = false;
-			satbrightview.AddSubview(satBrightIndicatorView);
+            var picker = new ColorPickerViewController
+            {
+                Title = title,
+                SelectedColor = initialColor
+            };
+            picker.ColorPicked += (_, args) =>
+            {
+                if (colorPicked != null)
+                {
+                    colorPicked(args.SelectedColor);
+                }
+            };
 
-			this.View.AddSubviews(new UIView[] {satbrightview, huewView, selPrevView});
-		}
+            var pickerNav = new UINavigationController(picker);
+            pickerNav.ModalPresentationStyle = UIModalPresentationStyle.FormSheet;
+            pickerNav.NavigationBar.Translucent = false;
 
-		public override void ViewDidLayoutSubviews ()
-		{
-			base.ViewDidLayoutSubviews ();
-			PositionIndicators();
-		}
+            var doneBtn = new UIBarButtonItem(UIBarButtonSystemItem.Done);
+            picker.NavigationItem.RightBarButtonItem = doneBtn;
+            doneBtn.Clicked += delegate
+            {
+                if (done != null)
+                {
+                    done(picker.SelectedColor);
+                }
 
-		void PositionIndicators()
-		{
-			PositionHueIndicatorView();
-			PositionSatBrightIndicatorView();
-		}
+                // hide the picker
+                parent.DismissViewController(true, null);
+            };
 
-		void PositionSatBrightIndicatorView ()
-		{
-			UIView.Animate(0.3f,0f,UIViewAnimationOptions.AllowUserInteraction, delegate() {
-				PointF pos = new PointF(satbrightview.saturation * satbrightview.Frame.Size.Width, 
-				                        satbrightview.Frame.Size.Height - (satbrightview.brightness * satbrightview.Frame.Size.Height));
-				satBrightIndicatorView.Frame = new RectangleF(pos.X - satBrightIndicatorSize.Width/2,pos.Y-satBrightIndicatorSize.Height/2,satBrightIndicatorSize.Width,satBrightIndicatorSize.Height);
-			}, delegate() {
-			});
-		}
+            // show the picker
+            parent.PresentViewController(pickerNav, true, null);
+        }
 
-		void PositionHueIndicatorView ()
-		{
-			UIView.Animate(0.3f,0f,UIViewAnimationOptions.AllowUserInteraction, delegate() {
-				float pos = huewView.Frame.Width * huewView.Hue;
-				huewIndicatorView.Frame = new RectangleF(pos - 10,huewView.Bounds.Y - 2,20,huewView.Bounds.Height + 2);
-			}, delegate() {
-				huewIndicatorView.Hidden = false;
-		});
-		}
+        public static Task<UIColor> PresentAsync(UIViewController parent, string title, UIColor initialColor)
+        {
+            return PresentAsync(parent, title, initialColor, null);
+        }
 
-		void HandleColorPicked ()
-		{
-			PositionSatBrightIndicatorView ();
-			selPrevView.BackgroundColor = UIColor.FromHSB (satbrightview.hue, satbrightview.saturation, satbrightview.brightness);
-
-			if (ColorPicked != null) {
-				ColorPicked();
-			}
-		}
-
-		void HandleHueChanged ()
-		{
-			PositionHueIndicatorView();
-			satbrightview.hue = huewView.Hue;
-			satbrightview.SetNeedsDisplay();
-			HandleColorPicked();
-		}
-
-		public UIColor SelectedColor {
-			get {
-				return UIColor.FromHSB(satbrightview.hue,satbrightview.saturation,satbrightview.brightness);
-			}
-			set {
-				float hue = 0,brightness = 0,saturation = 0,alpha = 0;
-				value.GetHSBA(out hue,out saturation,out brightness,out alpha);
-				huewView.Hue = hue;
-				satbrightview.hue = hue;
-				satbrightview.brightness = brightness;
-				satbrightview.saturation = saturation;
-				selPrevView.BackgroundColor = value;
-
-				PositionIndicators();
-
-				satbrightview.SetNeedsDisplay();
-				huewView.SetNeedsDisplay();
-			}
-		}
-
-		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations ()
-		{
-			return UIInterfaceOrientationMask.All;
-		}
-
-		//gia symvatotita me ios 4/5
-		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
-		{
-			return true;
-		}
-		public override void DidRotate (UIInterfaceOrientation fromInterfaceOrientation)
-		{
-			base.DidRotate (fromInterfaceOrientation);
-			if (UIDevice.CurrentDevice.SystemVersion.StartsWith("4.")){
-				PositionIndicators();
-			}
-		}
-
-		public override bool ShouldAutorotate ()
-		{
-			return true;
-		} 
-	}
+        public static Task<UIColor> PresentAsync(UIViewController parent, string title, UIColor initialColor, Action<UIColor> colorPicked)
+        {
+            var tcs = new TaskCompletionSource<UIColor>();
+            Present(parent, title, initialColor, color =>
+            {
+                tcs.SetResult(color);
+            }, colorPicked);
+            return tcs.Task;
+        }
+    }
 }
-

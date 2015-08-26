@@ -22,96 +22,105 @@
 */
 
 using System;
-using MonoTouch.UIKit;
-using System.Drawing;
+
+#if __UNIFIED__
+using CoreGraphics;
+using Foundation;
+using UIKit;
+#else
 using MonoTouch.CoreGraphics;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+
+using CGPoint = System.Drawing.PointF;
+using CGSize = System.Drawing.SizeF;
+using CGRect = System.Drawing.RectangleF;
+using nfloat = System.Single;
+#endif
 
 namespace AdvancedColorPicker
 {
-	public class HuePickerView : UIView
-	{
-		public event Action HueChanged;
+    public class HuePickerView : UIView
+    {
+        public HuePickerView()
+        {
+        }
 
-		public HuePickerView ()
-		{
-		}
+        public nfloat Hue { get; set; }
 
-		public float Hue { get; set; }
+        public event EventHandler HueChanged;
 
-		public override void Draw (RectangleF rect)
-		{
-			base.Draw (rect);
+        public override void Draw(CGRect rect)
+        {
+            base.Draw(rect);
 
-			CGContext context = UIGraphics.GetCurrentContext();
+            var step = 1f / 6f;
+            var locations = new nfloat[]
+            {
+                0.0f,
+                step * 1f,
+                step * 2f,
+                step * 3f,
+                step * 4f,
+                step * 5f,
+                1.0f
+            };
+            var colors = new CGColor[]
+            {
+                UIColor.Red.CGColor,
+                new CGColor(1, 0, 1, 1),
+                UIColor.Blue.CGColor,
+                new CGColor(0, 1, 1, 1),
+                UIColor.Green.CGColor,
+                new CGColor(1, 1, 0, 1),
+                UIColor.Red.CGColor
+            };
 
-			CGColorSpace colorSpace = CGColorSpace.CreateDeviceRGB();
+            using (var colorSpace = CGColorSpace.CreateDeviceRGB())
+            using (var gradiend = new CGGradient(colorSpace, colors, locations))
+            {
+                var context = UIGraphics.GetCurrentContext();
+                context.DrawLinearGradient(gradiend, new CGPoint(rect.Size.Width, 0), new CGPoint(0, 0), CGGradientDrawingOptions.DrawsBeforeStartLocation);
+            }
+        }
 
-			float step=0.166666666666667f;
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+            HandleTouches(touches, evt);
+        }
 
-			float[] locations = new float[] {
-				0.00f, 
-				step, 
-				step*2, 
-				step*3, 
-				step*4, 
-				step*5, 
-				1.0f
-			};
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            base.TouchesMoved(touches, evt);
+            HandleTouches(touches, evt);
+        }
 
-			CGColor c1 = new CGColor(1,0,1,1);
-			CGColor c2 = new CGColor(1,1,0,1);
-			CGColor c3 = new CGColor(0,1,1,1);
+        private void HandleTouches(NSSet touches, UIEvent evt)
+        {
+            var touch = (UITouch)evt.TouchesForView(this).AnyObject;
+            var pos = touch.LocationInView(this);
 
-			CGColor[] colors = new CGColor[] {
-				UIColor.Red.CGColor,
-				c1,
-				UIColor.Blue.CGColor,
-				c3,
-				UIColor.Green.CGColor,
-				c2,
-				UIColor.Red.CGColor
-			};
+            var p = pos.X;
+            var b = Frame.Size.Width;
 
+            if (p < 0)
+                Hue = 0;
+            else if (p > b)
+                Hue = 1;
+            else
+                Hue = p / b;
 
-			CGGradient gradiend = new CGGradient(colorSpace,colors, locations);
-			context.DrawLinearGradient(gradiend,new PointF(rect.Size.Width,0),new PointF(0,0),CGGradientDrawingOptions.DrawsBeforeStartLocation);
-			gradiend.Dispose();
-			colorSpace.Dispose();
-		} // draw
+            OnHueChanged();
+        }
 
-		public override void TouchesBegan (MonoTouch.Foundation.NSSet touches, UIEvent evt)
-		{
-			base.TouchesBegan (touches, evt);
-			HandleTouches(touches,evt);
-		}
-		public override void TouchesMoved (MonoTouch.Foundation.NSSet touches, UIEvent evt)
-		{
-			base.TouchesMoved (touches, evt);
-			HandleTouches(touches,evt);
-		}
-
-		private void HandleTouches (MonoTouch.Foundation.NSSet touches, UIEvent evt)
-		{
-			var touch = (UITouch)evt.TouchesForView (this).AnyObject;
-			PointF pos;
-			pos = touch.LocationInView (this);
-
-			float p = pos.X;
-
-			float b = Frame.Size.Width;
-	
-			if (p < 0)
-				Hue = 0;
-			else if (p > b)
-				Hue = 1;
-			else
-				Hue = p / b;
-
-
-			if (HueChanged != null) {
-				HueChanged();
-			}
-		}
-	}
+        protected virtual void OnHueChanged()
+        {
+            var handler = HueChanged;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+    }
 }
-

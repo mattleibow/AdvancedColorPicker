@@ -21,52 +21,56 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-using System;
-using MonoTouch.UIKit;
+#if __UNIFIED__
+using CoreGraphics;
+using UIKit;
+#else
 using MonoTouch.CoreGraphics;
-using System.Drawing;
+using MonoTouch.UIKit;
+
+using CGPoint = System.Drawing.PointF;
+using CGSize = System.Drawing.SizeF;
+using CGRect = System.Drawing.RectangleF;
+using nfloat = System.Single;
+#endif
 
 namespace AdvancedColorPicker
 {
-	public class HueIndicatorView : UIView
-	{
-		public HueIndicatorView ()
-		{
-			BackgroundColor = UIColor.Clear;
-		}
+    public class HueIndicatorView : UIView
+    {
+        public HueIndicatorView()
+        {
+            BackgroundColor = UIColor.Clear;
+        }
+        
+        public override void Draw(CGRect rect)
+        {
+            base.Draw(rect);
 
-		public HuePickerView huePickerViewRef;
+            var context = UIGraphics.GetCurrentContext();
 
-		public override void Draw (System.Drawing.RectangleF rect)
-		{
-			base.Draw (rect);
+            var indicatorLength = rect.Size.Height / 3f;
+            var halfLength = (indicatorLength / 2);
 
-			CGContext context = UIGraphics.GetCurrentContext();
+            context.SetFillColor(UIColor.Black.CGColor);
+            context.SetStrokeColor(UIColor.White.CGColor);
+            context.SetLineWidth(0.5f);
+            context.SetShadow(new CGSize(0, 0), 4);
 
-			float indicatorLength = rect.Size.Height / 3;
+            var pos = rect.Width / 2f;
 
-			context.SetFillColor(UIColor.Black.CGColor);
-			context.SetStrokeColor(UIColor.White.CGColor);
-			context.SetLineWidth(0.5f);
-			context.SetShadow(new SizeF(0,0),4);
+            context.MoveTo(pos - halfLength, -1);
+            context.AddLineToPoint(pos + halfLength, -1);
+            context.AddLineToPoint(pos, indicatorLength);
+            context.AddLineToPoint(pos - halfLength, -1);
 
-			float pos = rect.Width / 2;
+            context.MoveTo(pos - halfLength, rect.Size.Height + 1);
+            context.AddLineToPoint(pos + halfLength, rect.Size.Height + 1);
+            context.AddLineToPoint(pos, rect.Size.Height - indicatorLength);
+            context.AddLineToPoint(pos - halfLength, rect.Size.Height + 1);
 
-			context.MoveTo(pos - (indicatorLength/2), -1);
-			context.AddLineToPoint(pos+(indicatorLength/2), -1);
-			context.AddLineToPoint(pos, indicatorLength);
-			context.AddLineToPoint(pos-(indicatorLength/2), -1);
-
-			context.MoveTo(pos-(indicatorLength/2), rect.Size.Height+1);
-			context.AddLineToPoint(pos+(indicatorLength/2), rect.Size.Height+1);
-			context.AddLineToPoint(pos, rect.Size.Height-indicatorLength);
-			context.AddLineToPoint(pos-(indicatorLength/2), rect.Size.Height+1);
-
-			context.ClosePath();
-			context.DrawPath(CGPathDrawingMode.FillStroke); 
-		}
-
-
-	}
+            context.ClosePath();
+            context.DrawPath(CGPathDrawingMode.FillStroke);
+        }
+    }
 }
-

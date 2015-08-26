@@ -1,0 +1,34 @@
+﻿%YAML 1.2
+---
+name: Advanced Color Picker
+id: advancedcolorpicker
+publisher: Xamarin Inc
+publisher-url: http://xamarin.com
+summary: An open source color picker component for Xamarin.iOS.
+version: 2.0
+src-url: https://github.com/mattleibow/AdvancedColorPicker
+
+details: component/Details.md
+license: component/License.md
+getting-started: component/GettingStarted.md
+
+build: AdvancedColorPicker.sln
+libraries: 
+  ios: AdvancedColorPicker/bin/Release/AdvancedColorPicker.dll
+  ios-unified: AdvancedColorPicker-Unified/bin/Release/AdvancedColorPicker.dll
+
+icons: 
+  - images/advancedcolorpicker_128x128.png
+  - images/advancedcolorpicker_512x512.png
+
+samples: 
+  - name: iOS Classic Sample
+    path: AdvancedColorPickerDemo/AdvancedColorPickerDemo.sln
+    configuration: "Release"
+    removeFiles: 
+      - AdvancedColorPickerDemo-Unified.csproj
+  - name: iOS Unified Sample
+    path: AdvancedColorPickerDemo/AdvancedColorPickerDemo-Unified.sln
+    configuration: "Release"
+    removeFiles: 
+      - AdvancedColorPickerDemo.csproj

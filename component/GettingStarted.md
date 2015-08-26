@@ -2,9 +2,6 @@
 
 An open source color picker component for Xamarin.iOS that is very easy to use.
 
-<iframe src="https://appetize.io/embed/1uzmreu5wh2vzm79vpag1nwmqm?device=iphone5s&scale=75&autoplay=true&orientation=portrait&deviceColor=black" 
-        width="274px" height="587px" frameborder="0" scrolling="no">&nbsp;</iframe>
-
 ## Usage
 
 AdvancedColorPicker is very simple and easy to use. 
@@ -23,9 +20,9 @@ The first is `PresentAsync` that returns the selected color:
         NavigationController, 
         "Pick a color!",
         View.BackgroundColor);
-    
-    // use selected color
-        
+	
+	// use selected color
+		
 In the case when async method aren't preferrable, there is the synchronous
 `Present` method that takes a callback:
 
@@ -33,9 +30,9 @@ In the case when async method aren't preferrable, there is the synchronous
         NavigationController, 
         "Pick a color!",
         View.BackgroundColor,
-        color => {
-            // use selected color
-        });
+		color => {
+		    // use selected color
+		});
 
 ### ColorPickerViewController
 
@@ -85,45 +82,6 @@ using `ColorPickerView`:
         // use selected color
     };
 
-### ColorPickerViewController
-
-There is the `ColorPickerViewController`, which is a stand-alone controller that can be used
-to preesent a color picker to the user:
-
-    // create the picker
-    var picker = new ColorPickerViewController {
-        Title = "Pick a color!",
-        SelectedColor = View.BackgroundColor
-    };
-    
-    // events for colors as they are picked
-    picker.ColorPicked += (sender, e) => {
-        // use selected color
-        View.BackgroundColor = e.SelectedColor;
-    }
-    
-    // create the picker popup
-    var pickerNav = new UINavigationController(picker);
-    pickerNav.ModalPresentationStyle = UIModalPresentationStyle.FormSheet;
-    pickerNav.NavigationBar.Translucent = false;
-    var doneBtn = new UIBarButtonItem(UIBarButtonSystemItem.Done);
-    picker.NavigationItem.RightBarButtonItem = doneBtn;
-    doneBtn.Clicked += delegate {
-        // "Done" was clicked
-        
-        // use selected color
-        View.BackgroundColor = picker.SelectedColor;
-        
-        // hide the picker
-        NavigationController.DismissModalViewController(true);
-    };
-    
-    // show the picker
-    NavigationController.PresentModalViewController(pickerNav, true);
-
-<iframe src="https://appetize.io/embed/1uzmreu5wh2vzm79vpag1nwmqm?device=ipadair&scale=50&autoplay=true&orientation=landscape&deviceColor=black"
-        width="644px" height="432px" frameborder="0" scrolling="no">&nbsp;</iframe>
-
 ## Getting Colors
 
 Both `ColorPickerView` and `ColorPickerViewContoller` have the `SelectedColor` event 
@@ -142,11 +100,3 @@ To get the last color that was selected, we can use the `SelectedColor` property
     var colorPicker = new ColorPickerView();
     // ...
     var color = colorPicker.SelectedColor;
-
-## License
-
-AdvancedColorPicker is licensed under the terms of the MIT license.
-
-If you use this component in your projects consider adding the following in you app about screen:
-
-> This app uses AdvancedColorPicker developed by Yiannis Bourkelis & Matthew Leibowitz

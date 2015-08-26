@@ -22,33 +22,51 @@
 */
 
 using System;
+
+#if __UNIFIED__
+using CoreGraphics;
+using UIKit;
+#else
+using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
+
+using CGPoint = System.Drawing.PointF;
+using CGSize = System.Drawing.SizeF;
+using CGRect = System.Drawing.RectangleF;
+using nfloat = System.Single;
+#endif
+
+using AdvancedColorPicker;
 
 namespace AdvancedColorPickerDemo
 {
-	public class ContainerController : UIViewController
-	{
-		public ContainerController () 
-		{
-			Title = "Pick a color!";
-			View.BackgroundColor = UIColor.White;
-		}
+    public class ContainerController : UIViewController
+    {
+        public ContainerController()
+        {
+            Title = "Pick a color!";
+            View.BackgroundColor = UIColor.FromRGB(0.3f, 0.8f, 0.3f);
 
-		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations ()
-		{
-			return UIInterfaceOrientationMask.All;
-		}
-		
-		//gia symvatotita me ios 4/5
-		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
-		{
-			return true;
-		}
-		
-		public override bool ShouldAutorotate ()
-		{
-			return true;
-		} 
-	}
+            var pickAColorBtn = UIButton.FromType(UIButtonType.RoundedRect);
+            pickAColorBtn.Frame = new CGRect(UIScreen.MainScreen.Bounds.Width / 2 - 50, UIScreen.MainScreen.Bounds.Height / 2 - 22, 100, 44);
+            pickAColorBtn.AutoresizingMask = UIViewAutoresizing.FlexibleMargins;
+            pickAColorBtn.SetTitle("Pick a color!", UIControlState.Normal);
+            pickAColorBtn.TouchUpInside += async delegate
+            {
+                var alert = new UIAlertView("Hi", "hi there", null, null);
+
+                // get a color from the user
+                var color = await ColorPickerViewController.PresentAsync(NavigationController, "Pick a color!", View.BackgroundColor);
+
+                // changethe background
+                View.BackgroundColor = color;
+
+                // set the title to the hex value
+                nfloat red, green, blue, alpha;
+                color.GetRGBA(out red, out green, out blue, out alpha);
+                Title = string.Format("#{0:X2}{1:X2}{2:X2}", (int)(red * 255), (int)(green * 255), (int)(blue * 255));
+            };
+            View.AddSubview(pickAColorBtn);
+        }
+    }
 }
-
